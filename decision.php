@@ -1,14 +1,19 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $decision = $_POST['decision'];
-    file_put_contents("decision.txt", $decision); // Save the decision
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['decision'])) {
+        $decision = $_POST['decision'];
  
-    // Display the current decision from the file
-    $currentDecision = file_get_contents("decision.txt");
-    echo "Your decision ($currentDecision) has been recorded.";
+        // Save the decision to a file
+        $file = 'decision.txt';
+        if (file_put_contents($file, $decision)) {
+            echo "✅ Decision recorded: " . htmlspecialchars($decision);
+        } else {
+            echo "❌ Failed to write to file.";
+        }
+    } else {
+        echo "❌ No decision received.";
+    }
 } else {
-    // Read and display the current decision if the page is accessed without submitting the >
-    $currentDecision = file_get_contents("decision.txt");
-    echo "Current Decision: $currentDecision";
+    echo "❌ Invalid request method.";
 }
 ?>
